@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.androidgt.todoapp.addtasks.ui.model.TaskModel
 import javax.inject.Inject
 
-class TasksViewModel @Inject constructor(): ViewModel() {
+class TasksViewModel @Inject constructor() : ViewModel() {
 
 
     //esta es la variable que se modifica desde la vista
@@ -36,9 +36,18 @@ class TasksViewModel @Inject constructor(): ViewModel() {
     }
 
     fun onCheckBoxSelected(taskModel: TaskModel) {
-
+        // buscamos el index.
+        val index = _tasks.indexOf(taskModel)
+        // el elemento con el indice encontrado se actualiza con la funcion copy y cambiamos el valor de selected.
+        _tasks[index] = _tasks[index].let {
+            it.copy(selected = !it.selected)
+        }
     }
 
-    //almacenar el listado de items task.
+    fun onItemRemove(taskModel: TaskModel) {
+        // eliminamos la tarea
+        val task = _tasks.find { it.id == taskModel.id }
+        _tasks.remove(task)
 
+    }
 }
