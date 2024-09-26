@@ -1,6 +1,5 @@
 package com.androidgt.todoapp.addtasks.ui
 
-import android.graphics.drawable.shapes.Shape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,18 +15,17 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,24 +34,25 @@ import androidx.compose.ui.window.Dialog
 
 @Composable
 fun TasksScreen(taskViewModel: TasksViewModel) {
+
+    // accedemos a la variable showDialog desde la vista.
+    val showDialog: Boolean by taskViewModel.showDialog.observeAsState(false)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.LightGray)
     )
     {
-        AddTaskDialog(show = true, onDismiss = {})
-        FabDialog(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        )
+        AddTaskDialog(show = showDialog, onDismiss = { taskViewModel.onDialogClose() }, onTaskAdded = {taskViewModel.onTaskCreated(it)})
+        FabDialog(modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp), taskViewModel)
     }
 }
 
 @Composable
-fun FabDialog(modifier: Modifier) {
+fun FabDialog(modifier: Modifier, taskViewModel: TasksViewModel) {
     FloatingActionButton(onClick = {
+        taskViewModel.onShowDialogClick()
     }, modifier = modifier) {
         Icon(Icons.Default.Add, contentDescription = "Add")
     }
@@ -62,7 +61,8 @@ fun FabDialog(modifier: Modifier) {
 @Composable
 fun AddTaskDialog(
     show: Boolean,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onTaskAdded: (String) -> Unit
 ) {
 
     var myTask by remember { mutableStateOf("") }
@@ -92,7 +92,9 @@ fun AddTaskDialog(
                     Spacer(modifier = Modifier.height(8.dp))
                     TextField(value = myTask, onValueChange = { myTask = it }, singleLine = true)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = { }, modifier = Modifier.fillMaxWidth(0.4f)) {
+                    Button(onClick = {
+                        onTaskAdded(myTask)
+                    }, modifier = Modifier.fillMaxWidth(0.4f)) {
                         Text(text = "Agregar")
                     }
                 }
