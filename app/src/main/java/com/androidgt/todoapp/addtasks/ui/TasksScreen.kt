@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -37,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.androidgt.todoapp.addtasks.ui.model.TaskModel
 
 @Composable
 fun TasksScreen(taskViewModel: TasksViewModel) {
@@ -67,10 +69,19 @@ fun TasksScreen(taskViewModel: TasksViewModel) {
 @Composable
 fun TasksList(taskViewModel: TasksViewModel) {
 
+    //declaramos una lista de tareas.
+    val myTasks:List<TaskModel> = taskViewModel.tasks
+
+    LazyColumn {
+        items(myTasks, key = {it.id}){
+            ItemTask(it, taskViewModel)
+        }
+    }
 }
 
 @Composable
-fun ItemTask() {
+fun ItemTask(taskModel: TaskModel, taskViewModel: TasksViewModel) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,8 +95,10 @@ fun ItemTask() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Absolute.SpaceBetween
         ) {
-            Text(text = "Primera Tarea ", modifier = Modifier.padding(start = 12.dp))
-            Checkbox(checked = true, onCheckedChange = {})
+            Text(text = taskModel.task, modifier = Modifier.padding(start = 12.dp))
+            Checkbox(checked = taskModel.selected, onCheckedChange = {
+                taskViewModel.onCheckBoxSelected(taskModel)
+            })
         }
     }
 }
@@ -135,6 +148,7 @@ fun AddTaskDialog(
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(onClick = {
                         onTaskAdded(myTask)
+                        myTask = ""
                     }, modifier = Modifier.fillMaxWidth(0.4f)) {
                         Text(text = "Agregar")
                     }
