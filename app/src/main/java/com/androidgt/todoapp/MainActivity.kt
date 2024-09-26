@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.material3.Scaffold
 import com.androidgt.todoapp.addtasks.ui.TasksScreen
 import com.androidgt.todoapp.addtasks.ui.TasksViewModel
 import com.androidgt.todoapp.ui.theme.TodoAppTheme
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TodoAppTheme {
-                TasksScreen(taskViewModel)
+                    TasksScreen(taskViewModel)
             }
         }
     }
