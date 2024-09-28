@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androidgt.todoapp.addtasks.domain.AddTaskUseCase
+import com.androidgt.todoapp.addtasks.domain.DeleteTaskUseCase
 import com.androidgt.todoapp.addtasks.domain.GetTasksUseCase
 import com.androidgt.todoapp.addtasks.domain.UpdateTaskUseCase
 import com.androidgt.todoapp.addtasks.ui.TasksUiState.Success
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class TasksViewModel @Inject constructor(
     private val addTaskUseCase: AddTaskUseCase,
     private val updateTaskUseCase: UpdateTaskUseCase,
+    private val deleteTaskUseCase: DeleteTaskUseCase,
     getTasksUseCase: GetTasksUseCase
 ) : ViewModel() {
 
@@ -75,6 +77,8 @@ class TasksViewModel @Inject constructor(
         // eliminamos la tarea
 //        val task = _tasks.find { it.id == taskModel.id }
 //        _tasks.remove(task)
-
+        viewModelScope.launch {
+            deleteTaskUseCase(taskModel)
+        }
     }
 }

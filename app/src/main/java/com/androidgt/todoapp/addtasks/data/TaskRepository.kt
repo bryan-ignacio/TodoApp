@@ -15,11 +15,20 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao) {
 
     //necesitamos el dao para hacer las consoltas a la database.
     suspend fun add(taskModel: TaskModel) {
-        taskDao.addTask(TaskEntity(taskModel.id, taskModel.task, taskModel.selected))
+        taskDao.addTask(taskModel.toData())
     }
 
     suspend fun update(taskModel: TaskModel) {
-        taskDao.updateTask(TaskEntity(taskModel.id, taskModel.task, taskModel.selected))
+        taskDao.updateTask(taskModel.toData())
     }
 
+    suspend fun delete(taskModel: TaskModel) {
+        taskDao.delete(taskModel.toData())
+    }
+
+}
+
+
+fun TaskModel.toData():TaskEntity{
+    return TaskEntity(this.id, this.task, this.selected)
 }
