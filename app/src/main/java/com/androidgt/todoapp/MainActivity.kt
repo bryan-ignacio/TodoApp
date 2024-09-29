@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                 titleContentColor = Color.White,
-                            ), title = { Text("Tareas", modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Bold) })
+                            ), title = { Text("My Todo List", modifier = Modifier.padding(16.dp), fontWeight = FontWeight.SemiBold) })
                     }) {
                     Column(
                         modifier = Modifier.padding(it)
@@ -50,7 +50,6 @@ class MainActivity : ComponentActivity() {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(color = Color.White)
                         ) {
                             TasksScreen(taskViewModel)
                         }

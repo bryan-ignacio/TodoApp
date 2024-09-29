@@ -181,7 +181,7 @@ fun AddTaskDialog(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Agrega nueva tarea",
+                        text = "Add New Task",
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
@@ -193,7 +193,7 @@ fun AddTaskDialog(
                         onTaskAdded(myTask)
                         myTask = ""
                     }, modifier = Modifier.fillMaxWidth(0.4f)) {
-                        Text(text = "Agregar")
+                        Text(text = "Save")
                     }
                 }
             }
