@@ -17,10 +17,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -38,7 +41,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,6 +52,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.androidgt.todoapp.addtasks.ui.model.TaskModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TasksScreen(taskViewModel: TasksViewModel) {
 
@@ -74,9 +80,7 @@ fun TasksScreen(taskViewModel: TasksViewModel) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 40.dp)
-                    .background(color = Color.LightGray)
-            )
+                    .padding(top = 40.dp))
             {
                 AddTaskDialog(
                     show = showDialog,
@@ -109,7 +113,6 @@ fun TasksList(tasks: List<TaskModel>, taskViewModel: TasksViewModel) {
 
 @Composable
 fun ItemTask(taskModel: TaskModel, taskViewModel: TasksViewModel) {
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,12 +126,17 @@ fun ItemTask(taskModel: TaskModel, taskViewModel: TasksViewModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color.White)
                 .padding(5.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Absolute.SpaceBetween
         ) {
-            Text(text = taskModel.task, modifier = Modifier.padding(start = 12.dp))
+            Text(text = taskModel.task, modifier = Modifier.padding(start = 12.dp), style = TextStyle(
+                textDecoration = if (taskModel.selected) {
+                    TextDecoration.LineThrough // Aplica tachado si está seleccionado
+                } else {
+                    TextDecoration.None // Sin tachado si no está seleccionado
+                }
+            ))
             Checkbox(checked = taskModel.selected, onCheckedChange = {
                 taskViewModel.onCheckBoxSelected(taskModel)
             })
@@ -143,6 +151,8 @@ fun FabDialog(modifier: Modifier, taskViewModel: TasksViewModel) {
     }, modifier = modifier) {
         Icon(Icons.Default.Add, contentDescription = "Add")
     }
+
+
 }
 
 @Composable
@@ -171,9 +181,9 @@ fun AddTaskDialog(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Agrega una tarea",
+                        text = "Agrega nueva tarea",
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        fontSize = 18.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
